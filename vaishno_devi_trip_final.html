@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vaishno Devi Trip - Expense Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 3px solid #e9ecef;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #6c757d;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -3px;
+        }
+
+        .tab:hover {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .tab.active {
+            color: #667eea;
+            background: white;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .stats {
+            padding: 20px 30px;
+            background: #fff3cd;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-item .label {
+            font-size: 0.9rem;
+            color: #856404;
+            font-weight: 600;
+        }
+
+        .stat-item .value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #856404;
+            margin-top: 5px;
+        }
+
+        .filters {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .filter-group label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        select {
+            padding: 10px 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s;
+            min-width: 150px;
+        }
+
+        select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .reset-btn {
+            padding: 10px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+
+        .reset-btn:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .table-container {
+            padding: 30px;
+            overflow-x: auto;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #495057;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        th:last-child {
+            text-align: right;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        td:last-child {
+            text-align: right;
+            font-weight: 600;
+            color: #28a745;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .total-row {
+            background: #fff3cd !important;
+            font-weight: bold;
+        }
+
+        .total-row td {
+            padding: 15px;
+            font-size: 1.1rem;
+            border-top: 3px solid #ffc107;
+        }
+
+        .settlement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 30px;
+        }
+
+        .member-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid #dee2e6;
+        }
+
+        .member-card.owes {
+            border-color: #dc3545;
+            background: #fff5f5;
+        }
+
+        .member-card.gets {
+            border-color: #28a745;
+            background: #f0fff4;
+        }
+
+        .member-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #212529;
+        }
+
+        .member-phone {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 15px;
+        }
+
+        .member-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .member-stat {
+            text-align: center;
+        }
+
+        .member-stat-label {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+
+        .member-stat-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .status-badge {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .status-badge.owes {
+            background: #dc3545;
+            color: white;
+        }
+
+        .status-badge.gets {
+            background: #28a745;
+            color: white;
+        }
+
+        .transactions-section {
+            padding: 30px;
+            background: #f8f9fa;
+        }
+
+        .transactions-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #212529;
+        }
+
+        .transaction-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 5px solid #667eea;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .transaction-info {
+            flex: 1;
+        }
+
+        .transaction-from {
+            font-weight: 600;
+            color: #dc3545;
+            font-size: 1.1rem;
+        }
+
+        .transaction-to {
+            font-weight: 600;
+            color: #28a745;
+            font-size: 1.1rem;
+        }
+
+        .transaction-amount {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #667eea;
+            margin-left: 20px;
+        }
+
+        .upi-info {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .note {
+            background: #e7f3ff;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 20px 30px;
+            border-radius: 5px;
+        }
+
+        .note-title {
+            font-weight: bold;
+            color: #1976d2;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .settlement-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .transaction-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .transaction-amount {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <h1>🕉️ Vaishno Devi Trip Expenses</h1>
+                <p>Complete Expense Tracking & Settlement Calculator</p>
+            </div>
+
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('expenses')">📊 Expenses</div>
+                <div class="tab" onclick="switchTab('settlement')">💰 Settlement</div>
+            </div>
+
+            <!-- Expenses Tab -->
+            <div id="expenses-tab" class="tab-content active">
+                <div class="filters">
+                    <div class="filter-group">
+                        <label for="dateFilter">Filter by Date</label>
+                        <select id="dateFilter" onchange="filterExpenses()">
+                            <option value="all">All Dates</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="personFilter">Filter by Person</label>
+                        <select id="personFilter" onchange="filterExpenses()">
+                            <option value="all">All People</option>
+                        </select>
+                    </div>
+
+                    <button class="reset-btn" onclick="resetFilters()">Reset Filters</button>
+                </div>
+
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="label">Total Entries</div>
+                        <div class="value" id="totalEntries">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="label">Total Amount</div>
+                        <div class="value" id="totalAmount">₹0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="label">Filtered Entries</div>
+                        <div class="value" id="filteredEntries">0</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="label">Filtered Amount</div>
+                        <div class="value" id="filteredAmount">₹0</div>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table id="expenseTable">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Paid By</th>
+                                <th>Description</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Settlement Tab -->
+            <div id="settlement-tab" class="tab-content">
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="label">Total Expense</div>
+                        <div class="value">₹15,639</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="label">Per Person Average</div>
+                        <div class="value">₹1,954.88</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="label">Total Members</div>
+                        <div class="value">8</div>
+                    </div>
+                </div>
+
+                <div class="note">
+                    <div class="note-title">💡 Important Note</div>
+                    <div>Jasmeet paid cash to Shreyash for the ₹370 breakfast expense. This has been accounted for in the settlement.</div>
+                </div>
+
+                <div class="settlement-grid" id="settlementGrid">
+                </div>
+
+                <div class="transactions-section">
+                    <div class="transactions-title">🔄 Settlement Transactions</div>
+                    <div id="transactionsList">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const expenses = [
+            {date: "12/12", time: "7:27 pm", paidBy: "Utsav", amount: 40, description: "monaco"},
+            {date: "12/12", time: "7:27 pm", paidBy: "Shreyash", amount: 140, description: "j2 chai"},
+            {date: "12/12", time: "7:28 pm", paidBy: "Ankit", amount: 170, description: "paties (exclude Jasmeet, Vishal, Utsav)"},
+            {date: "12/12", time: "7:28 pm", paidBy: "Ankit", amount: 45, description: "water"},
+            {date: "12/12", time: "9:44 pm", paidBy: "Ankit", amount: 242, description: "Diet Coke (Exclude Sarvesh only)"},
+            {date: "13/12", time: "6:40 am", paidBy: "Sarvesh", amount: 200, description: "auto"},
+            {date: "13/12", time: "7:29 am", paidBy: "Devanshu", amount: 105, description: "tea"},
+            {date: "13/12", time: "7:37 am", paidBy: "Sarvesh", amount: 90, description: "Fen"},
+            {date: "13/12", time: "7:47 am", paidBy: "Jasmeet", amount: 105, description: "tea"},
+            {date: "13/12", time: "9:12 am", paidBy: "Devanshu", amount: 280, description: "brkfast"},
+            {date: "13/12", time: "9:31 am", paidBy: "Ankit", amount: 1000, description: "breakfast"},
+            {date: "13/12", time: "12:50 pm", paidBy: "Jasmeet", amount: 1000, description: "lunch (Exclude Sarvesh & Utsav)"},
+            {date: "14/12", time: "12:30 am", paidBy: "Utsav", amount: 1280, description: "evening snack"},
+            {date: "14/12", time: "12:30 am", paidBy: "Utsav", amount: 100, description: "locker"},
+            {date: "14/12", time: "4:40 am", paidBy: "Utsav", amount: 160, description: "tea"},
+            {date: "14/12", time: "4:40 am", paidBy: "Utsav", amount: 30, description: "water"},
+            {date: "14/12", time: "4:41 am", paidBy: "Saksham", amount: 200, description: "Auto to Abhinandan Hotel from station"},
+            {date: "14/12", time: "4:41 am", paidBy: "Saksham", amount: 100, description: "Auto to Jai Mata di dwar from Hotel"},
+            {date: "14/12", time: "4:41 am", paidBy: "Saksham", amount: 295, description: "4 hell and 1 happydent (Exclude Jasmeet, Sarvesh, Utsav)"},
+            {date: "14/12", time: "4:41 am", paidBy: "Saksham", amount: 798, description: "Food at Gulab"},
+            {date: "14/12", time: "4:41 am", paidBy: "Saksham", amount: 90, description: "Jalebi at Gulab (Exclude Sarvesh & Utsav)"},
+            {date: "14/12", time: "4:41 am", paidBy: "Saksham", amount: 320, description: "4 hell, 1 real juice, 1 water bottle (Exclude Utsav & Sarvesh)"},
+            {date: "14/12", time: "4:41 am", paidBy: "Jasmeet", amount: 60, description: "locker"},
+            {date: "14/12", time: "4:42 am", paidBy: "Devanshu", amount: 100, description: "auto from hotel to main dwar"},
+            {date: "14/12", time: "7:54 am", paidBy: "Jasmeet", amount: 400, description: "auto"},
+            {date: "14/12", time: "11:51 am", paidBy: "Shreyash", amount: 30, description: "soda devanshu sir"},
+            {date: "14/12", time: "1:06 pm", paidBy: "Ankit", amount: 4500, description: "Hotel"},
+            {date: "14/12", time: "1:42 pm", paidBy: "Utsav", amount: 1040, description: "Breakfast"},
+            {date: "14/12", time: "3:38 pm", paidBy: "Sarvesh", amount: 300, description: "hotel to railway station"},
+            {date: "14/12", time: "6:47 pm", paidBy: "Shreyash", amount: 1504, description: "mc d order"},
+            {date: "15/12", time: "11:47 am", paidBy: "Ankit", amount: 140, description: "cream roll"},
+            {date: "15/12", time: "11:47 am", paidBy: "Ankit", amount: 95, description: "evening snacks waiting area (Exclude Jasmeet)"},
+            {date: "15/12", time: "12:07 pm", paidBy: "Jasmeet", amount: 140, description: "chips"},
+            {date: "15/12", time: "3:43 pm", paidBy: "Shreyash", amount: 60, description: "water"},
+            {date: "15/12", time: "4:29 pm", paidBy: "Shreyash", amount: 20, description: "Pan (Inclusive Utsav, Ankit, Sarvesh)"},
+            {date: "15/12", time: "9:50 pm", paidBy: "Vishal", amount: 370, description: "Morning Breakfast (Ankit, Saksham, Shreyash, Sarvesh, Vishal) [Jasmeet paid cash to Shreyash]"},
+            {date: "15/12", time: "9:54 pm", paidBy: "Vishal", amount: 90, description: "Patty (Inclusive Utsav, Vishal, Jasmeet)"}
+        ];
+
+        const members = {
+            "Shreyash": "+91 9794612931",
+            "Saksham": "+91 8318882934",
+            "Sarvesh": "+91 9810432075",
+            "Devanshu": "+91 95407 12998",
+            "Utsav": "+91 99117 22177",
+            "Ankit": "+91 81788 09013",
+            "Vishal": "+91 7053661680",
+            "Jasmeet": "+91 7011684292"
+        };
+
+        const settlementData = {
+            "Shreyash": {paid: 1754, share: 2064.77, balance: -310.77},
+            "Saksham": {paid: 1803, share: 2064.77, balance: -261.77},
+            "Sarvesh": {paid: 590, share: 1742.86, balance: -1152.86},
+            "Devanshu": {paid: 485, share: 2020.77, balance: -1535.77},
+            "Utsav": {paid: 2650, share: 1699.43, balance: 950.57},
+            "Ankit": {paid: 6192, share: 2071.43, balance: 4120.57},
+            "Vishal": {paid: 460, share: 2060.77, balance: -1600.77},
+            "Jasmeet": {paid: 1705, share: 1914.20, balance: -209.20}
+        };
+
+        const transactions = [
+            {from: "Vishal", to: "Utsav", amount: 950.57},
+            {from: "Vishal", to: "Ankit", amount: 650.20},
+            {from: "Devanshu", to: "Ankit", amount: 1535.77},
+            {from: "Sarvesh", to: "Ankit", amount: 1152.86},
+            {from: "Shreyash", to: "Ankit", amount: 310.77},
+            {from: "Saksham", to: "Ankit", amount: 261.77},
+            {from: "Jasmeet", to: "Ankit", amount: 209.20}
+        ];
+
+        let filteredExpenses = [...expenses];
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            if (tab === 'expenses') {
+                document.querySelector('.tab:nth-child(1)').classList.add('active');
+                document.getElementById('expenses-tab').classList.add('active');
+            } else {
+                document.querySelector('.tab:nth-child(2)').classList.add('active');
+                document.getElementById('settlement-tab').classList.add('active');
+            }
+        }
+
+        function initializeFilters() {
+            const dates = [...new Set(expenses.map(e => e.date))].sort();
+            const dateFilter = document.getElementById('dateFilter');
+            dates.forEach(date => {
+                const option = document.createElement('option');
+                option.value = date;
+                option.textContent = date;
+                dateFilter.appendChild(option);
+            });
+
+            const people = [...new Set(expenses.map(e => e.paidBy))].sort();
+            const personFilter = document.getElementById('personFilter');
+            people.forEach(person => {
+                const option = document.createElement('option');
+                option.value = person;
+                option.textContent = person;
+                personFilter.appendChild(option);
+            });
+        }
+
+        function filterExpenses() {
+            const dateFilter = document.getElementById('dateFilter').value;
+            const personFilter = document.getElementById('personFilter').value;
+
+            filteredExpenses = expenses.filter(expense => {
+                const dateMatch = dateFilter === 'all' || expense.date === dateFilter;
+                const personMatch = personFilter === 'all' || expense.paidBy === personFilter;
+                return dateMatch && personMatch;
+            });
+
+            renderTable();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+
+            filteredExpenses.forEach(expense => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${expense.date}</td>
+                    <td>${expense.time}</td>
+                    <td>${expense.paidBy}</td>
+                    <td>${expense.description}</td>
+                    <td>₹${expense.amount}</td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            const totalAmount = filteredExpenses.reduce((sum, exp) => sum + exp.amount, 0);
+            const totalRow = document.createElement('tr');
+            totalRow.className = 'total-row';
+            totalRow.innerHTML = `
+                <td colspan="4" style="text-align: right;">TOTAL:</td>
+                <td>₹${totalAmount}</td>
+            `;
+            tbody.appendChild(totalRow);
+
+            updateStats();
+        }
+
+        function updateStats() {
+            const totalAmount = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+            const filteredAmount = filteredExpenses.reduce((sum, exp) => sum + exp.amount, 0);
+
+            document.getElementById('totalEntries').textContent = expenses.length;
+            document.getElementById('totalAmount').textContent = '₹' + totalAmount.toLocaleString();
+            document.getElementById('filteredEntries').textContent = filteredExpenses.length;
+            document.getElementById('filteredAmount').textContent = '₹' + filteredAmount.toLocaleString();
+        }
+
+        function resetFilters() {
+            document.getElementById('dateFilter').value = 'all';
+            document.getElementById('personFilter').value = 'all';
+            filteredExpenses = [...expenses];
+            renderTable();
+        }
+
+        function renderSettlement() {
+            const grid = document.getElementById('settlementGrid');
+            grid.innerHTML = '';
+
+            Object.keys(settlementData).forEach(name => {
+                const data = settlementData[name];
+                const card = document.createElement('div');
+                
+                let statusClass = 'settled';
+                let statusText = 'Settled ✓';
+                if (data.balance > 0) {
+                    statusClass = 'gets';
+                    statusText = `Gets Back ₹${data.balance.toFixed(2)}`;
+                } else if (data.balance < 0) {
+                    statusClass = 'owes';
+                    statusText = `Owes ₹${Math.abs(data.balance).toFixed(2)}`;
+                }
+
+                card.className = `member-card ${statusClass}`;
+                card.innerHTML = `
+                    <div class="member-name">${name}</div>
+                    <div class="member-phone">${members[name]}</div>
+                    <div class="member-stats">
+                        <div class="member-stat">
+                            <div class="member-stat-label">Paid</div>
+                            <div class="member-stat-value">₹${data.paid}</div>
+                        </div>
+                        <div class="member-stat">
+                            <div class="member-stat-label">Share</div>
+                            <div class="member-stat-value">₹${data.share.toFixed(2)}</div>
+                        </div>
+                    </div>
+                    <div class="status-badge ${statusClass}">${statusText}</div>
+                `;
+                grid.appendChild(card);
+            });
+
+            const transactionsList = document.getElementById('transactionsList');
+            transactionsList.innerHTML = '';
+
+            transactions.forEach((trans, idx) => {
+                const item = document.createElement('div');
+                item.className = 'transaction-item';
+                item.innerHTML = `
+                    <div class="transaction-info">
+                        <div>
+                            <span class="transaction-from">${trans.from}</span>
+                            pays to
+                            <span class="transaction-to">${trans.to}</span>
+                        </div>
+                        <div class="upi-info">UPI: ${members[trans.to]}</div>
+                    </div>
+                    <div class="transaction-amount">₹${trans.amount.toFixed(2)}</div>
+                `;
+                transactionsList.appendChild(item);
+            });
+        }
+
+        window.onload = function() {
+            initializeFilters();
+            renderTable();
+            renderSettlement();
+        };
+    </script>
+</body>
+</html>
