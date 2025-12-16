@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vaishno Devi Trip - Expense Tracker</title>
+    <title>Vaishno Devi Trip - Final Expense Tracker</title>
     <style>
         * {
             margin: 0;
@@ -461,11 +461,11 @@
                 <div class="stats">
                     <div class="stat-item">
                         <div class="label">Total Expense</div>
-                        <div class="value">₹15,639</div>
+                        <div class="value">₹15,939</div>
                     </div>
                     <div class="stat-item">
                         <div class="label">Per Person Average</div>
-                        <div class="value">₹1,954.88</div>
+                        <div class="value">₹1,992.38</div>
                     </div>
                     <div class="stat-item">
                         <div class="label">Total Members</div>
@@ -521,14 +521,16 @@
             {date: "14/12", time: "1:06 pm", paidBy: "Ankit", amount: 4500, description: "Hotel"},
             {date: "14/12", time: "1:42 pm", paidBy: "Utsav", amount: 1040, description: "Breakfast"},
             {date: "14/12", time: "3:38 pm", paidBy: "Sarvesh", amount: 300, description: "hotel to railway station"},
-            {date: "14/12", time: "6:47 pm", paidBy: "Shreyash", amount: 1504, description: "mc d order"},
+            {date: "14/12", time: "6:47 pm", paidBy: "Shreyash", amount: 1389, description: "mc d order (base for all 8)"},
+            {date: "14/12", time: "6:47 pm", paidBy: "Shreyash", amount: 115, description: "French fries (Shreyash, Saksham, Utsav, Jasmeet)"},
             {date: "15/12", time: "11:47 am", paidBy: "Ankit", amount: 140, description: "cream roll"},
             {date: "15/12", time: "11:47 am", paidBy: "Ankit", amount: 95, description: "evening snacks waiting area (Exclude Jasmeet)"},
             {date: "15/12", time: "12:07 pm", paidBy: "Jasmeet", amount: 140, description: "chips"},
-            {date: "15/12", time: "3:43 pm", paidBy: "Shreyash", amount: 60, description: "water"},
-            {date: "15/12", time: "4:29 pm", paidBy: "Shreyash", amount: 20, description: "Pan (Inclusive Utsav, Ankit, Sarvesh)"},
+            {date: "15/12", time: "3:43 pm", paidBy: "Shreyash", amount: 80, description: "water"},
+            {date: "15/12", time: "4:29 pm", paidBy: "Shreyash", amount: 80, description: "Pan (Inclusive Utsav, Ankit, Sarvesh)"},
             {date: "15/12", time: "9:50 pm", paidBy: "Vishal", amount: 370, description: "Morning Breakfast (Ankit, Saksham, Shreyash, Sarvesh, Vishal) [Jasmeet paid cash to Shreyash]"},
-            {date: "15/12", time: "9:54 pm", paidBy: "Vishal", amount: 90, description: "Patty (Inclusive Utsav, Vishal, Jasmeet)"}
+            {date: "15/12", time: "9:54 pm", paidBy: "Vishal", amount: 90, description: "Patty (Inclusive Utsav, Vishal, Jasmeet)"},
+            {date: "15/12", time: "11:54 am", paidBy: "Saksham", amount: 220, description: "Pastry (Exclude Ankit)"}
         ];
 
         const members = {
@@ -543,24 +545,24 @@
         };
 
         const settlementData = {
-            "Shreyash": {paid: 1754, share: 2064.77, balance: -310.77},
-            "Saksham": {paid: 1803, share: 2064.77, balance: -261.77},
-            "Sarvesh": {paid: 590, share: 1742.86, balance: -1152.86},
-            "Devanshu": {paid: 485, share: 2020.77, balance: -1535.77},
-            "Utsav": {paid: 2650, share: 1699.43, balance: 950.57},
-            "Ankit": {paid: 6192, share: 2071.43, balance: 4120.57},
-            "Vishal": {paid: 460, share: 2060.77, balance: -1600.77},
-            "Jasmeet": {paid: 1705, share: 1914.20, balance: -209.20}
+            "Shreyash": {paid: 1834, share: 2113.07, balance: -279.07},
+            "Saksham": {paid: 2023, share: 2113.07, balance: -90.07},
+            "Sarvesh": {paid: 590, share: 1782.42, balance: -1192.42},
+            "Devanshu": {paid: 485, share: 2040.32, balance: -1555.32},
+            "Utsav": {paid: 2650, share: 1767.74, balance: 882.26},
+            "Ankit": {paid: 6192, share: 2079.56, balance: 4112.44},
+            "Vishal": {paid: 460, share: 2080.32, balance: -1620.32},
+            "Jasmeet": {paid: 1705, share: 1962.50, balance: -257.50}
         };
 
         const transactions = [
-            {from: "Vishal", to: "Utsav", amount: 950.57},
-            {from: "Vishal", to: "Ankit", amount: 650.20},
-            {from: "Devanshu", to: "Ankit", amount: 1535.77},
-            {from: "Sarvesh", to: "Ankit", amount: 1152.86},
-            {from: "Shreyash", to: "Ankit", amount: 310.77},
-            {from: "Saksham", to: "Ankit", amount: 261.77},
-            {from: "Jasmeet", to: "Ankit", amount: 209.20}
+            {from: "Vishal", to: "Utsav", amount: 882.26},
+            {from: "Vishal", to: "Ankit", amount: 738.06},
+            {from: "Devanshu", to: "Ankit", amount: 1555.32},
+            {from: "Sarvesh", to: "Ankit", amount: 1192.42},
+            {from: "Shreyash", to: "Ankit", amount: 279.07},
+            {from: "Jasmeet", to: "Ankit", amount: 257.50},
+            {from: "Saksham", to: "Ankit", amount: 90.07}
         ];
 
         let filteredExpenses = [...expenses];
